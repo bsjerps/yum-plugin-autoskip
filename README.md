@@ -1,0 +1,2 @@
+# yum-plugin-autoskip
+TBD
