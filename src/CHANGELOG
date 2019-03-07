@@ -1,0 +1,14 @@
+- List of changes
+
+2019-02-23 : First version (localmirror plugin)
+
+2019-03-05 : Improved version:
+* automatically skips unavailable repos
+* does no longer interfere with fastestmirror
+* allows disabling of repo id's by wildcard
+
+2019-03-06 : Renamed to autoskip
+* To make it work with later versions of fastestmirror
+  as this was silently changed on Mon Jun 5 2017 to suddenly use
+  prereopsetup instead of postreposetup which caused it to break
+  
