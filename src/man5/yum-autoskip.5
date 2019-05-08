@@ -1,0 +1,74 @@
+.TH YUM-AUTOSKIP "5" "May 2019" "Outrun" "Outrun manual"
+.SH NAME
+yum-autoskip \- change repository mirrors or disable them using local config files.
+.SH SYNOPSIS
+.B /etc/yum/mirrors
+is the configuration directory for yum autoskip. For each repo id, a file can be placed which replaces the
+repository's mirrorlist= parameter.
+.P
+A special file with the name 'disabled' can be placed that configures repositories that should be completely disabled.
+.SH DESCRIPTION
+Autoskip will first look for a file named /etc/yum/mirrors/disabled
+and disable any repo id that matches the patterns in that file.
+
+Then for each repo, autoskip will look for a file named
+/etc/yum/mirrors/<repoid> and change the 'mirrorlist=' parameter to this file.
+
+Then for each enabled repo, it will try to reach the mirrorlist url (or baseurl if mirrorlist
+is not configured) and disable the repo if the url is not reachable.
+
+This helps on networks without internet access to redirect YUM to a local
+mirror (ftp or http) without changing the repo definitions (as these may get
+overwritten during YUM updates). If the local mirror does not respond then
+YUM would still failback to the original baseurl/mirrorlist which would
+not be the case if we modded the .repo files directly.
+
+In case failovermethod is set to 'priority' this leads to the locally defined
+urls to be tried first, before baseurl and the repo's mirrorlist. This avoids
+errors before switching to alternative mirrors on restricted LANs.
+
+.SH OPTIONS
+None
+.SH EXAMPLES
+Say you want to configure a local mirror for CentOS 7. The default repo ids for CentOS are base, extras, updates.
+You also want to block extras, All without messing with the CentOS-Base.repo file.
+.br
+Your local web server running the repo mirrors is repo.example.net and has repo mirrors under /yum/mirror/centos/7/
+.br
+Add the following files in /etc/yum/mirrors/:
+.P
+base:
+.nf
+http://repo.example.net/yum/mirror/centos/$releasever/os/$basearch
+.fi
+updates:
+.nf
+http://repo.example.net/yum/mirror/centos/$releasever/updates/$basearch
+.fi
+disabled:
+.nf
+extras
+.fi
+.SH FILES
+/etc/yum/pluginconf.d/autoskip.conf
+.br
+/etc/yum/mirrors
+.SH "KNOWN ISSUES"
+\- Cannot re-enable a repo with --enablerepo=<repoid> once disabled.
+.br
+\- FTP based repos currently not tested for reachability
+.br
+\- Breaks if the plugin does not load BEFORE fastestmirror.py (which is
+why I renamed it to 'autoskip')
+
+
+.SH COPYRIGHT
+Copyright \(co 2018 Bart Sjerps <bart@outrun.nl>
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+.br
+This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.
+.PP
+If you have suggestions for improvements in this tool, please send them along via the above address.
+.SH "SEE ALSO"
+yum(8)
+

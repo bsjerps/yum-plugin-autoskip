@@ -34,18 +34,20 @@ Autoskip performs 3 steps:
 rm -rf %{buildroot}
 install -m 0755 -d %{buildroot}/usr/lib/yum-plugins
 install -m 0755 -d %{buildroot}/usr/share/doc/%{name}
+install -m 0755 -d %{buildroot}/usr/share/man/man5
 install -m 0755 -d %{buildroot}/etc/yum/mirrors
 install -m 0755 -d %{buildroot}/etc/yum/pluginconf.d
 
 cp -p autoskip.py %{buildroot}/usr/lib/yum-plugins
 cp -p autoskip.conf %{buildroot}/etc/yum/pluginconf.d
 cp -p doc/* %{buildroot}/usr/share/doc/%{name}
-
+cp -p man5/* %{buildroot}/usr/share/man/man5
 touch %{buildroot}/usr/lib/yum-plugins/autoskip.py{c,o}
 
 %files
-%doc /usr/share/doc/%{name}/*
 %defattr(0644,root,root,755)
+%doc /usr/share/doc/%{name}/*
+/usr/share/man/man5/*
 %dir /etc/yum/mirrors
 %config(noreplace) /etc/yum/pluginconf.d/autoskip.conf
 /usr/lib/yum-plugins/autoskip.py
