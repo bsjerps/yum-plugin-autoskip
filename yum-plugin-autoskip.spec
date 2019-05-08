@@ -1,6 +1,6 @@
 Name:		yum-plugin-autoskip
 Summary:	YUM plugin that changes or disables repos using local config files.
-Version:	1.1.4
+Version:	1.1.5
 Release:	1%{?dtap}
 License:	GPLv3+
 Group:		Outrun/Extras
@@ -9,6 +9,9 @@ BuildArch:	noarch
 Requires:	yum >= 3.0
 Provides:	yum-plugin-localmirror
 Obsoletes:	yum-plugin-localmirror
+
+# Prevent compiling .py files
+%define	__python	false
 
 %description
 Autoskip changes repositories without modifying the YUM repo files.
@@ -29,17 +32,16 @@ Autoskip performs 3 steps:
 %setup -q -n %{name}
 %install
 rm -rf %{buildroot}
+install -m 0755 -d %{buildroot}/usr/lib/yum-plugins
+install -m 0755 -d %{buildroot}/usr/share/doc/%{name}
+install -m 0755 -d %{buildroot}/etc/yum/mirrors
+install -m 0755 -d %{buildroot}/etc/yum/pluginconf.d
 
-%make_install
+cp -p autoskip.py %{buildroot}/usr/lib/yum-plugins
+cp -p autoskip.conf %{buildroot}/etc/yum/pluginconf.d
+cp -p doc/* %{buildroot}/usr/share/doc/%{name}
 
-#install -m 0755 -d %{buildroot}/usr/lib/yum-plugins
-#install -m 0755 -d %{buildroot}/usr/share/doc/%{name}
-#install -m 0755 -d %{buildroot}/etc/yum/mirrors
-#install -m 0755 -d %{buildroot}/etc/yum/pluginconf.d
-
-#install -m 0755 -pt %{buildroot}/usr/lib/yum-plugins autoskip.py
-#install -m 0755 -pt %{buildroot}/etc/yum/pluginconf.d autoskip.conf
-#install -m 0755 -pt %{buildroot}/usr/share/doc/%{name} COPYING CHANGELOG
+touch %{buildroot}/usr/lib/yum-plugins/autoskip.py{c,o}
 
 %files
 %doc /usr/share/doc/%{name}/*
