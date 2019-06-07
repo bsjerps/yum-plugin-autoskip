@@ -130,7 +130,7 @@ def prereposetup_hook(conduit):
         # Get the mirrorlist url or if it's empty, the baseurl
         if repo.mirrorlist is not None:
             url = repo.mirrorlist
-        elif repo.baseurl[0] is not None:
+        elif repo.baseurl:
             url = repo.baseurl[0]
 
         # If the url is no http... then do nothing
