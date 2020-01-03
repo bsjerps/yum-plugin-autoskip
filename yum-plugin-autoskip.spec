@@ -1,6 +1,6 @@
 Name:		yum-plugin-autoskip
 Summary:	YUM plugin that changes or disables repos using local config files.
-Version:	1.1.6
+Version:	1.2.0
 Release:	1%{?dtap}
 License:	GPLv3+
 Group:		Outrun/Extras

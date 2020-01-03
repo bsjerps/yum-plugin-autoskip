@@ -77,7 +77,7 @@ requires_api_version = '2.3'
 plugin_type = (TYPE_CORE)
 
 # Where to look for mirror lists and the 'disabled' file
-confdir = '/etc/yum/mirrors/'
+confdir = '/etc/yum/mirrors'
 
 # Read a config file and return an array with the containing lines
 
@@ -106,8 +106,8 @@ def prereposetup_hook(conduit):
     blocked = []
     blocklist = []
 
-    if os.path.isfile(confdir + 'disabled'):
-        blocklist = readconfig(confdir + 'disabled')
+    if os.path.isfile(os.path.join(confdir,'disabled')):
+        blocklist = readconfig(os.path.join(confdir,'disabled'))
 
     repos = conduit.getRepos()
     for repo in repos.listEnabled():
@@ -123,9 +123,11 @@ def prereposetup_hook(conduit):
 #          repo.skip_if_unavailable = True
 
         # Mod the mirrorlist if the local alternative exists
-        if os.path.isfile(confdir + repo.id):
-            repo.mirrorlist = 'file://' + confdir + repo.id
+        if os.path.isfile(os.path.join(confdir,repo.id)):
+            repo.mirrorlist = 'file://' + os.path.join(confdir,repo.id)
             modded.append(repo.id)
+            if repo.metalink:
+                repo.metalink = None
 
         # Get the mirrorlist url or if it's empty, the baseurl
         if repo.mirrorlist is not None:
